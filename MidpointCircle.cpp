@@ -19,14 +19,14 @@ public:
 
         while (x <= y)
         {
-            Graphics::putpixel(cX + x, y + cY);
-            Graphics::putpixel(cX + x, -y + cY);
-            Graphics::putpixel(cX + -x, y + cY);
-            Graphics::putpixel(cX + -x, -y + cY);
-            Graphics::putpixel(cX + y, x + cY);
-            Graphics::putpixel(cX + y, -x + cY);
-            Graphics::putpixel(cX + -y, x + cY);
-            Graphics::putpixel(cX + -y, -x + cY);
+            Graphics::putpixel(cX + x, y + cY, ColorName::RED);
+            Graphics::putpixel(cX + x, -y + cY, ColorName::RED);
+            Graphics::putpixel(cX + -x, y + cY, ColorName::RED);
+            Graphics::putpixel(cX + -x, -y + cY, ColorName::RED);
+            Graphics::putpixel(cX + y, x + cY, ColorName::RED);
+            Graphics::putpixel(cX + y, -x + cY, ColorName::RED);
+            Graphics::putpixel(cX + -y, x + cY, ColorName::RED);
+            Graphics::putpixel(cX + -y, -x + cY, ColorName::RED);
             points.emplace_back(cX + x, y + cY);
             points.emplace_back(cX + x, -y + cY);
             points.emplace_back(cX + -x, y + cY);

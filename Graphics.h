@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <unordered_map>
 #include <cstring>
 #include "Color.h"
 
@@ -10,20 +11,28 @@ private:
 public:
     static void init(int nRows, int nCols, char defaultBg = '.')
     {
+        // initialize color system
+        Color::init();
+
         s_rows = nRows;
         s_cols = nCols;
-        m_grid = new char*[s_rows];
+        s_grid = new char*[s_rows];
+        s_colors = new ColorName*[s_rows];
         s_BgLetter = defaultBg;
         for (int i = 0; i < s_rows; ++i)
         {
-            m_grid[i] = new char[s_cols];
-            std::memset(m_grid[i], defaultBg, s_cols);
+            s_grid[i] = new char[s_cols];
+            s_colors[i] = new ColorName[s_cols];
+
+            std::memset(s_grid[i], defaultBg, s_cols);
+            for (int j = 0; j < s_cols; j++)
+            {
+                s_colors[i][j] = ColorName::WHITE;
+            }
         }
 
-        // initialize color system
-        Color::init();
     }
-    static void putpixel(int x, int y)
+    static void putpixel(int x, int y, ColorName color = ColorName::WHITE)
     {
         x = s_cols / 2 + x;
         y = s_rows / 2 - y - 1;    
@@ -32,10 +41,12 @@ public:
             return;
 
 
-        m_grid[y][x] = '*';
+        s_grid[y][x] = '*';
+        s_colors[y][x] = color;
     }
     static void display(bool showAxis = true, ColorName axisColor = ColorName::GREEN)
     {
+        static const auto& resetColor = Color::GetColorCodeStr(ColorName::RESET);
         for (int i = 0; i < s_rows; ++i)
         {
             for (int j = 0; j < s_cols; ++j)
@@ -47,8 +58,20 @@ public:
                 }
                 if (isAnAxisPt)
                     continue;
-                std::cout << m_grid[i][j];
+
+                if (s_colors    [i][j] != ColorName::WHITE)
+                {
+                    ColorName color = s_colors[i][j];
+                    const auto& colorCode = Color::GetColorCodeStr(color);
+                    std::cout << colorCode << s_grid[i][j] << resetColor;
+                }
+                else
+                {
+                    std::cout<<s_grid[i][j];
+                }
             }
+
+
             std::cout << std::endl;
         }
     }
@@ -97,6 +120,7 @@ private:
     }
 private:
     inline static int s_rows = 0, s_cols = 0;
-    inline static char** m_grid = nullptr;
+    inline static char** s_grid = nullptr;
+    inline static ColorName** s_colors = nullptr;
     inline static char s_BgLetter = '.';
 };
